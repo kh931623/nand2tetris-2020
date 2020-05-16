@@ -55,6 +55,12 @@ CHIP ALU {
    And16(a=fx, b=fy, out=xAndY);
    Mux16(a=xAndY, b=xPlusY, sel=f, out=tempOut);
    Not16(in=tempOut, out=notTempOut);
-   Mux16(a=tempOut, b=notTempOut, sel=no, out=out);
+   Mux16(a=tempOut, b=notTempOut, sel=no, out=out, out=finalOut, out[15]=ng, out[15]=ngCopy);
 
+   Not16(in=finalOut, out=notFinalOut);
+   Inc16(in=notFinalOut, out=negativeOut);
+   Add16(a=finalOut, b=negativeOut, out=outMinusOut);
+   Add16(a=outMinusOut, b=negativeOut, out=outMinsuDoubleOut, out[15]=v);
+   Or(a=v, b=ngCopy, out=nzr);
+   Not(in=nzr, out=zr);
 }
